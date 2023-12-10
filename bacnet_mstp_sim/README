@@ -1,0 +1,62 @@
+
+Install python
+
+Install pip -
+sudo apt install python3-pip
+sudo apt install python3-testresources
+
+Install following python libraries
+pip install bacpypes==0.18.0
+pip install misty
+
+
+For creating virtual serial ports - 
+
+sudo apt-get update
+sudo apt-get install gcc
+sudo apt install make
+
+git clone https://github.com/freemed/tty0tty
+cd tty0tty/module/
+make
+sudo cp tty0tty.ko /lib/modules/$(uname -r)/kernel/drivers/misc/
+sudo depmod
+sudo modprobe tty0tty (for real ubuntu there might be issue executing this command, in that case disable secure boot)
+sudo chmod 666 /dev/tnt*
+ls /dev | grep tn
+
+It will creating followig pairs of virtual serial ports
+
+tnt0 <--> tnt1
+tnt2 <--> tnt3
+tnt4 <--> tnt5
+tnt6 <--> tnt7
+
+To persist ports -
+sudo nano /etc/modules
+add - tty0tty
+
+Creat symlinks to use in our library
+
+sudo ln -fs /dev/tnt0 /dev/ttyS0
+sudo ln -fs /dev/tnt1 /dev/ttyTIA485-0
+
+sudo ln -fs /dev/tnt2 /dev/ttyS1
+sudo ln -fs /dev/tnt3 /dev/ttyTIA485-1
+
+sudo ln -fs /dev/tnt0 /dev/ttyS1
+sudo ln -fs /dev/tnt1 /dev/ttyUSB0
+
+Open bac_server.ini and update following details as per need
+
+objectIdentifier: 699
+objectName: BACServer
+address: 30
+interface:/dev/ttyS0
+baudrate: 19200
+interval:5
+
+
+Run simulator
+
+python3 CommandableMixin.py --ini bac_server.ini

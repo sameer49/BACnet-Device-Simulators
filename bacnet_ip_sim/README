@@ -1,0 +1,20 @@
+
+Install python
+
+Install pip -
+sudo apt install python3-pip
+sudo apt install python3-testresources
+
+Install following python libraries
+pip install bacpypes==0.18.0
+
+
+Run simulator
+
+python3 bacnet_ip_device.py ip-address
+
+E.g.
+python3 bacnet_ip_device.py 192.168.1.110
+
+For using different device name and port
+python3 bacnet_ip_device.py 192.168.1.110 102 47809
